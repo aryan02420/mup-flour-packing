@@ -19,4 +19,4 @@ out	creg2, al
 ; set default values
 mov	usrTemp, 30h
 mov	usrWegt, 02h
-mov	vlvsts, 00h
+mov	vlvSts, 00h
