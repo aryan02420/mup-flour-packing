@@ -8,5 +8,5 @@ x1:	cmp	al, wKey
 	jne	x2
 	call	setWegt
 x2:	cmp	al, sKey
-	jne	x2
+	jne	x0
 	call	strtMach
