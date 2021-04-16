@@ -32,6 +32,10 @@ portB2	equ	12h
 portC2	equ	14h
 creg2	equ	16h
 
+vlvOpn	equ	0ffh
+vlvCls	equ	00h
+
+
 timrA	equ	20h
 timrB	equ	22h
 timrC	equ	24h
