@@ -10,8 +10,8 @@ gn_num:	cmp	al, 0
 	jb	gn_str
 	mov	cl, 4
 	shl	keyBfr, cl
-	cbw
-	or	keyBfr, ax
+	or	al, keyBfr
+	call	setDisp1
 	jmp	gn_str
 gn_ret:	ret
 getNum endp

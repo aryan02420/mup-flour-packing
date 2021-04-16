@@ -8,7 +8,7 @@ keyAct	db	07h, 08h, 09h, f0h
 	db	f5h, 00h, f4h, f3h
 
 
-keyBfr	dw	?
+keyBfr	db	?
 usrTemp	db	?
 usrWegt	db	?
 
@@ -22,8 +22,8 @@ bKey	equ	f2h
 eKey	equ	f3h
 sKey	equ	f4h
 
-dispL	equ	00h
-dispH	equ	02h
+disp1	equ	00h
+disp2	equ	02h
 keyPad	equ	04h
 creg1	equ	06h
 
