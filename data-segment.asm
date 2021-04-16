@@ -8,9 +8,13 @@ keyAct	db	07h, 08h, 09h, f0h
 	db	f5h, 00h, f4h, f3h
 
 
-keyBfr	dw	0000h
-usrTemp	db	0h
-usrWegt	db	0h
+keyBfr	dw	?
+usrTemp	db	?
+usrWegt	db	?
+
+vlvSts	db	?
+; 00 => closed, not flowing
+; ff => open, flowing
 
 tKey	equ	f0h
 wKey	equ	f1h
