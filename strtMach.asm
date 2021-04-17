@@ -3,11 +3,14 @@ strtMach proc near
 sm_loop:call	getATemp
 	mov	bl, cUsrTemp
 	add	bl, 5
-	cmp	cActTemp,  bl
+	mov	al, cActTemp
+	cmp	al,  bl
 	jbe	sm_norm
 	call	ringAlm
 	jmp	sm_ret
-sm_norm:mov	cx, cDelay
+sm_norm:call	bin2bcd
+	call	setDisp0
+	mov	cx, cDelay
 	call	strTimrB
 	call	opnVlv
 sm_x0:	nop
@@ -16,7 +19,10 @@ sm_x0:	nop
 	jmp	sm_x0
 sm_x1:	call	clsVlv
 	call	stpTimrB
-	mov	cx, 70		; wait before next cycle
+	inc	numPac
+	call	calcAvPc
+	call	bin2bcd
+	call	setDisp1
 	call	strTimrB
 sm_x2:	nop
 	cmp	ticks, 70

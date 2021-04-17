@@ -9,12 +9,12 @@ keyAct	db	007h, 008h, 009h, 0f0h
 
 
 keyBfr	db	?
-usrTemp	db	?
-usrWegt	db	?
-cUsrTemp db	?
-cUsrWegt db	?
-actTemp	db	?
-cActTemp db	?
+usrTemp	db	?	;bcd
+usrWegt	db	?	;bcd
+cUsrTemp db	?	;bin
+cUsrWegt db	?	;bin
+actTemp	db	?	;bin 0-255
+cActTemp db	?	;bin 0-100
 
 minutes	db	?
 ticks	dw	?
@@ -22,6 +22,9 @@ ticks	dw	?
 vlvSts	db	?
 
 cDelay	dw	?
+
+numPac	db	?
+avgPac	db	?
 
 vlvOpn	equ	0ffh
 vlvCls	equ	00h

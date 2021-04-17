@@ -28,3 +28,5 @@ out	portC2, al
 ;
 mov	minutes, 0
 mov	ticks, 0
+mov	numPac, 0
+mov	avgPac, 0

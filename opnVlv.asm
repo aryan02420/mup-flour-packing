@@ -1,4 +1,5 @@
 opnVlv proc near
+	pusha
 	mov	al, vlvSts
 	cmp	al, vlvCls
 	jne	ov_x0
@@ -8,5 +9,6 @@ opnVlv proc near
 	out	portC2, al
 	mov	al, vlvOpn
 	mov	vlvSts, al
+	popa
 ov_x0:	ret
 opnVlv endp
