@@ -8,35 +8,36 @@ keyAct	db	007h, 008h, 009h, 0f0h
 	db	0f5h, 000h, 0f4h, 0f3h
 
 
-keyBfr	db	?
-usrTemp	db	?	;bcd
-usrWegt	db	?	;bcd
-cUsrTemp db	?	;bin
-cUsrWegt db	?	;bin
-actTemp	db	?	;bin 0-255
-cActTemp db	?	;bin 0-100
+keyBfr	dw	?
+usrTemp	db	?	; bcd
+usrWegt	db	?	; bcd
+usrTWegt dw	?	; bcd
+cUsrTemp db	?	; bin
+cUsrWegt db	?	; bin
+cUsrTWegt dw	?	; bin
+actTemp	db	?	; bin 0-255
+cActTemp db	?	; bin 0-100
 
-minutes	db	?
-ticks	dw	?
+minutes	db	?	; counts minutes passed
+ticks	dw	?	; counts 0.25 seconds
 
-vlvSts	db	?
+cDelay	dw	?	; how long valve is open
 
-cDelay	dw	?
+numPac	dw	?
+avgPac	dw	?
+totPac	dw	?
 
-numPac	db	?
-avgPac	db	?
-
-vlvOpn	equ	0ffh
-vlvCls	equ	00h
-
-tpKG	equ	80
-; 80 ticks = 20sec for 1kg
+tpKG	equ	40
+;40 ticks = 10sec for 1kg
 
 tKey	equ	0f0h
 wKey	equ	0f1h
 bKey	equ	0f2h
 eKey	equ	0f3h
 sKey	equ	0f4h
+
+
+; IO addresses
 
 disp0	equ	00h
 disp1	equ	02h
@@ -52,3 +53,6 @@ timrA	equ	20h
 timrB	equ	22h
 timrC	equ	24h
 timrCreg equ	26h
+
+8259_1	equ	30h
+8259_2	equ	32h

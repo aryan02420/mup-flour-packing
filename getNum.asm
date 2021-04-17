@@ -7,11 +7,12 @@ gn_str:	call	getKey
 	call	clrKBfr
 	jnp	gn_str
 gn_num:	cmp	al, 0
-	jb	gn_str
+	jl	gn_str
 	mov	cl, 4
 	shl	keyBfr, cl
 	or	al, keyBfr
 	call	setDisp1
 	jmp	gn_str
-gn_ret:	ret
+gn_ret:	mov	ax, keyBfr
+	ret
 getNum endp

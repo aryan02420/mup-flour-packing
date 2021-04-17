@@ -1,3 +1,4 @@
+	call	setWegt
 x0:	call	getKey
 	cmp	al, 0
 	jge	x0	; if number key pressed
@@ -6,7 +7,7 @@ x0:	call	getKey
 	call	setTemp
 x1:	cmp	al, wKey
 	jne	x2
-	call	setWegt
+	call	setTWegt
 x2:	cmp	al, sKey
 	jne	x0
 	call	strtMach

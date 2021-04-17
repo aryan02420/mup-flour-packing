@@ -1,16 +1,19 @@
 strtMach proc near
+	call	calcTPac
 	call	calcDelay
-sm_loop:call	getATemp
+sm_loop:mov	ax, numPac
+	cmp	ax, totPac
+	jae	sm_ret
+	call	getATemp
 	mov	bl, cUsrTemp
 	add	bl, 5
 	mov	al, cActTemp
-	cmp	al,  bl
+	cmp	al, bl
 	jbe	sm_norm
 	call	ringAlm
 	jmp	sm_ret
 sm_norm:call	bin2bcd
 	call	setDisp0
-	mov	cx, cDelay
 	call	strTimrB
 	call	opnVlv
 sm_x0:	nop
@@ -25,7 +28,7 @@ sm_x1:	call	clsVlv
 	call	setDisp1
 	call	strTimrB
 sm_x2:	nop
-	cmp	ticks, 70
+	cmp	ticks, 200
 	jae	sm_x3
 	jmp	sm_x2
 sm_x3:	jmp	sm_loop
