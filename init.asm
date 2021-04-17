@@ -24,3 +24,7 @@ mov	vlvSts, 00h
 ; adc read' = 1
 mov	al, 00000001b
 out	portC2, al
+
+;
+mov	minutes, 0
+mov	ticks, 0

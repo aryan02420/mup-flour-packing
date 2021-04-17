@@ -12,6 +12,8 @@ keyBfr	db	?
 usrTemp	db	?
 usrWegt	db	?
 
+minutes	db	?
+ticks	db	?
 
 vlvSts	db	?
 
