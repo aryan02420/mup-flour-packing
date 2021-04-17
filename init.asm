@@ -20,3 +20,7 @@ out	creg2, al
 mov	usrTemp, 30h
 mov	usrWegt, 02h
 mov	vlvSts, 00h
+
+; adc read' = 1
+mov	al, 00000001b
+out	portC2, al
