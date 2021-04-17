@@ -1,4 +1,6 @@
 clrKBfr proc near
-	mov	keyBfr, 0
+	mov	al, 0
+	mov	keyBfr, al
+	call	setDisp1
 	ret
 clrKBfr endp

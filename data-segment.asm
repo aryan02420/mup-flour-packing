@@ -13,8 +13,9 @@ usrTemp	db	?
 usrWegt	db	?
 
 vlvSts	db	?
-; 00 => closed, not flowing
-; ff => open, flowing
+
+vlvOpn	equ	0ffh
+vlvCls	equ	00h
 
 tKey	equ	f0h
 wKey	equ	f1h
@@ -31,10 +32,6 @@ tempInp	equ	10h
 portB2	equ	12h
 portC2	equ	14h
 creg2	equ	16h
-
-vlvOpn	equ	0ffh
-vlvCls	equ	00h
-
 
 timrA	equ	20h
 timrB	equ	22h
