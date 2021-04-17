@@ -1,30 +1,31 @@
-keyCode db	EEH, EDH, EBH, E7H	; 7 8 9 T
-	db	DEH, DDH, DBH, D7H	; 4 5 6 W
-	db	BEH, BDH, BBH, B7H	; 1 2 3 B
-	db	7EH, 7DH, 7BH, 77H	;   0 S E
-keyAct	db	07h, 08h, 09h, f0h
-	db	04h, 05h, 06h, f1h
-	db	01h, 02h, 03h, f2h
-	db	f5h, 00h, f4h, f3h
+keyCode db	0EEH, 0EDH, 0EBH, 0E7H	; 7 8 9 T
+	db	0DEH, 0DDH, 0DBH, 0D7H	; 4 5 6 W
+	db	0BEH, 0BDH, 0BBH, 0B7H	; 1 2 3 B
+	db	07EH, 07DH, 07BH, 077H	;   0 S E
+keyAct	db	007h, 008h, 009h, 0f0h
+	db	004h, 005h, 006h, 0f1h
+	db	001h, 002h, 003h, 0f2h
+	db	0f5h, 000h, 0f4h, 0f3h
 
 
 keyBfr	db	?
 usrTemp	db	?
 usrWegt	db	?
 
+
 vlvSts	db	?
 
 vlvOpn	equ	0ffh
 vlvCls	equ	00h
 
-tKey	equ	f0h
-wKey	equ	f1h
-bKey	equ	f2h
-eKey	equ	f3h
-sKey	equ	f4h
+tKey	equ	0f0h
+wKey	equ	0f1h
+bKey	equ	0f2h
+eKey	equ	0f3h
+sKey	equ	0f4h
 
-disp1	equ	00h
-disp2	equ	02h
+disp0	equ	00h
+disp1	equ	02h
 keyPad	equ	04h
 creg1	equ	06h
 
