@@ -1,4 +1,5 @@
 getATemp proc near
+	call	getTemp
 	mov	ah, 0
 	mov	al, actTemp
 	mov	cl, 100

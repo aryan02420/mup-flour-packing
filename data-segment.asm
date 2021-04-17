@@ -17,12 +17,17 @@ actTemp	db	?
 cActTemp db	?
 
 minutes	db	?
-ticks	db	?
+ticks	dw	?
 
 vlvSts	db	?
 
+cDelay	dw	?
+
 vlvOpn	equ	0ffh
 vlvCls	equ	00h
+
+wtFRate	equ	200
+; 200 gm per sec
 
 tKey	equ	0f0h
 wKey	equ	0f1h
