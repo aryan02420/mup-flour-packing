@@ -11,6 +11,10 @@ keyAct	db	007h, 008h, 009h, 0f0h
 keyBfr	db	?
 usrTemp	db	?
 usrWegt	db	?
+cUsrTemp db	?
+cUsrWegt db	?
+actTemp	db	?
+cActTemp db	?
 
 minutes	db	?
 ticks	db	?

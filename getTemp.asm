@@ -6,14 +6,16 @@ gt_x0	nop
 	cmp	dl, 1
 	je	gt_x0:
 	in	ah, tempInp
-	mov	al, 00000000b
+	mov	al, 00000001b
 	out	portC2, al	; stop read adc
 	mov	al, ah
-	;make dl 1
-	;start adc conversion
-	;loop till dl == 1
-	;store temp in al
+	mov	actTemp, al
 	ret
 getTemp endp
 
-;ISRTemp will make dl = 0
+; make dl 1
+; start adc conversion
+; loop till dl == 1
+; store temp in al
+
+; ISRTemp will make dl = 0
