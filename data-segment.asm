@@ -26,8 +26,8 @@ cDelay	dw	?
 vlvOpn	equ	0ffh
 vlvCls	equ	00h
 
-wtFRate	equ	200
-; 200 gm per sec
+tpKG	equ	80
+; 80 ticks = 20sec for 1kg
 
 tKey	equ	0f0h
 wKey	equ	0f1h
