@@ -503,13 +503,7 @@ end
 inc	minutes
 iret
 
-pusha
-mov	al, cUsrWegt
-mov	ah, 0
-mov	bl, 0ffh
-mul	bl
-mov	totPac, ax
-popa
+mov	al, 0ffh
 iret
 
 inc	ticks
