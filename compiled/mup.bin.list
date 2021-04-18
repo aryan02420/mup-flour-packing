@@ -1,0 +1,568 @@
+EMU8086 GENERATED LISTING. MACHINE CODE <- SOURCE.
+ 
+mup.bin -- emu8086 assembler version: 4.08  
+ 
+[ 4/19/2021  --  1:10:30 AM ] 
+ 
+===================================================================================================
+[LINE]     LOC: MACHINE CODE                          SOURCE
+===================================================================================================
+ 
+[   1]        :                                       #make_bin#
+[   2]        :                                       
+[   3]        :                                       #LOAD_SEGMENT=FFFFh#
+[   4]        :                                       #LOAD_OFFSET=0000h#
+[   5]        :                                       
+[   6]        :                                       #CS=0000h#
+[   7]        :                                       #IP=0000h#
+[   8]        :                                       
+[   9]        :                                       #DS=0000h#
+[  10]        :                                       #ES=0000h#
+[  11]        :                                       
+[  12]        :                                       #SS=0000h#
+[  13]        :                                       #SP=1FFEh#
+[  14]        :                                       
+[  15]        :                                       #AX=0000h#
+[  16]        :                                       #BX=0000h#
+[  17]        :                                       #CX=0000h#
+[  18]        :                                       #DX=0000h#
+[  19]        :                                       #SI=0000h#
+[  20]        :                                       #DI=0000h#
+[  21]        :                                       #BP=0000h#
+[  22]        :                                       
+[  23]        :                                       
+[  24]    FFFFF720: ??                                    jmp st1
+[  25]    FFFFF723: ??                                    nop
+[  26]        :                                       
+[  27]        :                                       org 0160h
+[  28]    0004: ??                                    dw  isr1
+[  29]    0006: ??                                    dw  0000
+[  30]    0008: ??                                    dw  isr2
+[  31]    000A: ??                                    dw  0000
+[  32]    000C: ??                                    dw  isr3
+[  33]    000E: ??                                    dw  0000
+[  34]        :                                       
+[  35]        :                                       org 700h
+[  36]        :                                       
+[  37]    016C: ??                                    keyCode db	0EEH, 0EDH, 0EBH, 0E7H	; 7 8 9 T
+[  38]    0170: ??                                    	db	0DEH, 0DDH, 0DBH, 0D7H	; 4 5 6 W
+[  39]    0174: ??                                    	db	0BEH, 0BDH, 0BBH, 0B7H	; 1 2 3 B
+[  40]    0178: ??                                    	db	07EH, 07DH, 07BH, 077H	;   0 S E
+[  41]    017C: ??                                    keyAct	db	007h, 008h, 009h, 0f0h
+[  42]    0180: ??                                    	db	004h, 005h, 006h, 0f1h
+[  43]    0184: ??                                    	db	001h, 002h, 003h, 0f2h
+[  44]    0188: ??                                    	db	0f5h, 000h, 0f4h, 0f3h
+[  45]        :                                       
+[  46]        :                                       org 01000h
+[  47]        :                                       
+[  48]    0720: ??                                    keyBfr	dw	?
+[  49]    0722: ??                                    usrTemp	db	?	; bcd
+[  50]    0723: ??                                    usrWegt	db	?	; bcd
+[  51]    0724: ??                                    usrTWegt dw	?	; bcd
+[  52]    0726: ??                                    cUsrTemp db	?	; bin
+[  53]    0727: ??                                    cUsrWegt db	?	; bin
+[  54]    0728: ??                                    cUsrTWegt dw	?	; bin
+[  55]    072A: ??                                    actTemp	db	?	; bin 0-255
+[  56]    072B: ??                                    cActTemp db	?	; bin 0-100
+[  57]        :                                       
+[  58]    072C: ??                                    minutes	db	?	; counts minutes passed
+[  59]    072D: ??                                    ticks	dw	?	; counts 0.25 seconds
+[  60]        :                                       
+[  61]    072F: ??                                    cDelay	dw	?	; how long valve is open
+[  62]        :                                       
+[  63]    0731: ??                                    numPac	dw	?
+[  64]    0733: ??                                    avgPac	dw	?
+[  65]    0735: ??                                    totPac	dw	?
+[  66]        :                                       
+[  67]        :                                       tpKG	equ	40
+[  68]        :                                       ;40 ticks = 10sec for 1kg
+[  69]        :                                       
+[  70]        :                                       tKey	equ	0f0h
+[  71]        :                                       wKey	equ	0f1h
+[  72]        :                                       bKey	equ	0f2h
+[  73]        :                                       eKey	equ	0f3h
+[  74]        :                                       sKey	equ	0f4h
+[  75]        :                                       
+[  76]        :                                       
+[  77]        :                                       ; IO addresses
+[  78]        :                                       
+[  79]        :                                       disp0	equ	00h
+[  80]        :                                       disp1	equ	02h
+[  81]        :                                       keyPad	equ	04h
+[  82]        :                                       creg1	equ	06h
+[  83]        :                                       
+[  84]        :                                       tempInp	equ	10h
+[  85]        :                                       portB2	equ	12h
+[  86]        :                                       portC2	equ	14h
+[  87]        :                                       creg2	equ	16h
+[  88]        :                                       
+[  89]        :                                       timrA	equ	20h
+[  90]        :                                       timrB	equ	22h
+[  91]        :                                       timrC	equ	24h
+[  92]        :                                       timrCreg equ	26h
+[  93]        :                                       
+[  94]        :                                       A8259_1	equ	30h
+[  95]        :                                       A8259_2	equ	32h
+[  96]        :                                       
+[  97]    0737: ??                                    st1:    sti
+[  98]        :                                       ; initialize 8255 (1)
+[  99]        :                                       ; portA = output / mode0
+[ 100]        :                                       ; portB = output / mode0
+[ 101]        :                                       ; portC = input:output / BSR
+[ 102]        :                                       ; 1   00 0 1   0 0 0
+[ 103]    0738: ??                                    mov	al, 10001000b
+[ 104]    073A: ??                                    out	creg1, al
+[ 105]    073C: ??                                    mov	al, 00h
+[ 106]    073E: ??                                    out	disp0, al
+[ 107]    0740: ??                                    out	disp1, al
+[ 108]        :                                       
+[ 109]        :                                       ; initialize 8255 (2)
+[ 110]        :                                       ; portA = input / mode0
+[ 111]        :                                       ; portB = input / mode0
+[ 112]        :                                       ; portC = output / BSR
+[ 113]        :                                       ; 1   00 1 0   0 1 0
+[ 114]    0742: ??                                    mov	al, 10010010b
+[ 115]    0744: ??                                    out	creg2, al
+[ 116]        :                                       
+[ 117]        :                                       ; set default values
+[ 118]    0746: ??                                    mov	usrTemp, 50h
+[ 119]    074B: ??                                    mov	usrWegt, 02h
+[ 120]        :                                       
+[ 121]        :                                       ; adc read' = 1
+[ 122]    0750: ??                                    mov	al, 00000001b
+[ 123]    0752: ??                                    out	portC2, al
+[ 124]        :                                       
+[ 125]    0754: ??                                    mov 	al,34h
+[ 126]    0756: ??                                    out 	creg2,al		;control word for clock 1
+[ 127]    0758: ??                                    mov 	al,54h
+[ 128]    075A: ??                                    out	    creg2,al		;control word for clock 2
+[ 129]    075C: ??                                    mov 	al,94h
+[ 130]    075E: ??                                    out 	creg2,al		;control word for clock 3
+[ 131]        :                                       
+[ 132]    0760: ??                                    mov 	al,88h
+[ 133]    0762: ??                                    out 	timrA,al			;load lsb in clk1
+[ 134]    0764: ??                                    mov 	al,13h
+[ 135]    0766: ??                                    out 	timrA,al			;load msb in clk1
+[ 136]    0768: ??                                    mov 	al,0fah
+[ 137]    076A: ??                                    out 	timrB,al			;load lsb in clk2
+[ 138]    076C: ??                                    mov 	al,0f0h
+[ 139]    076E: ??                                    out 	timrC,al			;load lsb in clk3
+[ 140]        :                                       
+[ 141]    0770: ??                                    mov 	al,13h
+[ 142]    0772: ??                                    out 	A8259_1,al
+[ 143]    0774: ??                                    mov 	al,40h
+[ 144]    0776: ??                                    out 	A8259_2,al
+[ 145]    0778: ??                                    mov 	al,01h
+[ 146]    077A: ??                                    out 	A8259_2,al
+[ 147]        :                                       
+[ 148]        :                                       
+[ 149]    077C: ??                                    mov	minutes, 0
+[ 150]    0781: ??                                    mov	ticks, 0
+[ 151]    0787: ??                                    mov	numPac, 0
+[ 152]    078D: ??                                    mov	avgPac, 0
+[ 153]        :                                       
+[ 154]    0793: ??                                    	call	setWegt
+[ 155]    0796: ??                                    x0:	call	getKey
+[ 156]    0799: ??                                    	cmp	al, 0
+[ 157]    079B: ??                                    	jge	x0	; if number key pressed
+[ 158]    079D: ??                                    	cmp	al, tKey
+[ 159]    079F: ??                                    	jne	x1
+[ 160]    07A1: ??                                    	call	setTemp
+[ 161]    07A4: ??                                    x1:	cmp	al, wKey
+[ 162]    07A6: ??                                    	jne	x2
+[ 163]    07A8: ??                                    	call	setTWegt
+[ 164]    07AB: ??                                    x2:	cmp	al, sKey
+[ 165]    07AD: ??                                    	jne	x0
+[ 166]    07AF: ??                                    	call	strtMach
+[ 167]        :                                       
+[ 168]    07B2:                                       bcd2bin proc near
+[ 169]    07B2: ??                                    	mov	ah, al
+[ 170]    07B4: ??                                    	and	ah, 0fh
+[ 171]    07B7: ??                                    	mov	cl, 4
+[ 172]    07B9: ??                                    	shr	al, cl
+[ 173]    07BB: ??                                    	mov	cl, 10
+[ 174]    07BD: ??                                    	mul	cl
+[ 175]    07BF: ??                                    	add	al, ah
+[ 176]    07C1: ??                                    	ret
+[ 177]        :                                       bcd2bin endp
+[ 178]        :                                       
+[ 179]        :                                       
+[ 180]        :                                       ; al = bcd 25h
+[ 181]        :                                       ; ah = 25h
+[ 182]        :                                       ; ah = ah & 0fh = 05h
+[ 183]        :                                       ; al = al >> 4 = 02h
+[ 184]        :                                       ; al = al * 10 = 20 = 14h
+[ 185]        :                                       ; al = al + ah = 19h = 25
+[ 186]        :                                       
+[ 187]    07C2:                                       bin2bcd proc near
+[ 188]    07C2: ??                                    	mov	ah, 0
+[ 189]    07C4: ??                                    	mov	cl, 10
+[ 190]    07C6: ??                                    	div	cl
+[ 191]    07C8: ??                                    	mov	cl, 4
+[ 192]    07CA: ??                                    	shl	al, cl
+[ 193]    07CC: ??                                    	or	al, ah
+[ 194]    07CE: ??                                    	ret
+[ 195]        :                                       bin2bcd endp
+[ 196]        :                                       
+[ 197]        :                                       
+[ 198]        :                                       ; al = 3fh = 63d
+[ 199]        :                                       ; al = ax // 10 = 06h
+[ 200]        :                                       ; ah = ax % 10 = 03h
+[ 201]        :                                       ; al = al << 4 = 60h
+[ 202]        :                                       ; al = al | ah = 63h
+[ 203]        :                                       
+[ 204]    07CF:                                       calcAvPc proc near
+[ 205]    07CF: ??                                    	pusha
+[ 206]    07D0: ??                                    	mov	ax, numPac
+[ 207]    07D3: ??                                    	mov	bl, minutes
+[ 208]    07D7: ??                                    	inc	bl
+[ 209]    07D9: ??                                    	div	bl
+[ 210]    07DB: ??                                    	mov	cl, 60
+[ 211]    07DD: ??                                    	mov	ah, 0
+[ 212]    07DF: ??                                    	mul	cl
+[ 213]    07E1: ??                                    	mov	avgPac, ax
+[ 214]    07E4: ??                                    	popa
+[ 215]    07E5: ??                                    	ret
+[ 216]        :                                       calcAvPc endp
+[ 217]        :                                       
+[ 218]    07E6:                                       calcDelay proc near
+[ 219]    07E6: ??                                    	pusha
+[ 220]    07E7: ??                                    	mov	al, cUsrWegt
+[ 221]    07EA: ??                                    	mov	ah, 0
+[ 222]    07EC: ??                                    	mov	cl, tpKG
+[ 223]    07EE: ??                                    	mul	cl	; ax = al * cl
+[ 224]    07F0: ??                                    	mov	cDelay, ax
+[ 225]    07F3: ??                                    	popa
+[ 226]    07F4: ??                                    	ret
+[ 227]        :                                       calcDelay endp
+[ 228]        :                                       
+[ 229]    07F5:                                       calcTPac proc near
+[ 230]    07F5: ??                                    	mov	ax, cUsrTWegt
+[ 231]    07F8: ??                                    	mov	bl, cUsrWegt
+[ 232]    07FC: ??                                    	div	bl
+[ 233]    07FE: ??                                    	mov	ah, 0
+[ 234]    0800: ??                                    	mov	totPac, ax
+[ 235]    0803: ??                                    	ret
+[ 236]        :                                       calcTPac endp
+[ 237]        :                                       
+[ 238]    0804:                                       clrKBfr proc near
+[ 239]    0804: ??                                    	pusha
+[ 240]    0805: ??                                    	mov	ax, 0
+[ 241]    0808: ??                                    	mov	keyBfr, ax
+[ 242]    080B: ??                                    	call	setDisp1
+[ 243]    080E: ??                                    	popa
+[ 244]    080F: ??                                    	ret
+[ 245]        :                                       clrKBfr endp
+[ 246]        :                                       
+[ 247]    0810:                                       clsVlv proc near
+[ 248]    0810: ??                                    	pusha
+[ 249]    0811: ??                                    	mov	al, 00000011b
+[ 250]    0813: ??                                    	out	portC2, al
+[ 251]    0815: ??                                    	popa
+[ 252]    0816: ??                                    cv_x0:	ret
+[ 253]        :                                       clsVlv endp
+[ 254]        :                                       
+[ 255]    0817:                                       delayA proc near
+[ 256]    0817: ??                                    	pusha
+[ 257]    0818: ??                                    	mov	cx, 500
+[ 258]    081B: ??                                    d_x0:	nop
+[ 259]    081C: ??                                    	dec	cx
+[ 260]    081D: ??                                    	jnz	d_x0
+[ 261]    081F: ??                                    	popa
+[ 262]    0820: ??                                    	ret
+[ 263]        :                                       delayA endp
+[ 264]        :                                       
+[ 265]    0821:                                       getATemp proc near
+[ 266]    0821: ??                                    	call	getTemp
+[ 267]    0824: ??                                    	mov	ah, 0
+[ 268]    0826: ??                                    	mov	al, actTemp
+[ 269]    0829: ??                                    	mov	cl, 100
+[ 270]    082B: ??                                    	mul	cl
+[ 271]    082D: ??                                    	mov	bl, 0ffh
+[ 272]    082F: ??                                    	div	bl
+[ 273]    0831: ??                                    	mov	cActTemp, al
+[ 274]    0834: ??                                    	ret
+[ 275]        :                                       getATemp endp
+[ 276]        :                                       
+[ 277]        :                                       ; 	measured	store
+[ 278]        :                                       ; 0*C	00000000b	00000000b
+[ 279]        :                                       ; 100*C	11111111b	01100100b
+[ 280]        :                                       
+[ 281]    0835:                                       getKey proc near
+[ 282]        :                                       
+[ 283]        :                                       ; check no key is pressed
+[ 284]        :                                       ; if a key is kept pressed
+[ 285]        :                                       ; wait for release
+[ 286]    0835: ??                                    	mov	al, 00h
+[ 287]    0837: ??                                    	out	keyPad, al
+[ 288]    0839: ??                                    k_x0:	in	al, keyPad
+[ 289]    083B: ??                                    	and	al, 0f0h
+[ 290]    083D: ??                                    	cmp	al, 0f0h		; if no key was pressed
+[ 291]    083F: ??                                    	je	x0
+[ 292]        :                                       
+[ 293]    0844: ??                                    	call delayA			; debounce
+[ 294]        :                                       
+[ 295]    0847: ??                                    	mov	al, 00h
+[ 296]    0849: ??                                    	out	keyPad, al
+[ 297]    084B: ??                                    	in	al, keyPad
+[ 298]    084D: ??                                    	and	al, 0f0h
+[ 299]    084F: ??                                    	cmp	al, 0f0h		; if still no key was pressed
+[ 300]    0851: ??                                    	je	k_x0
+[ 301]        :                                       
+[ 302]        :                                       
+[ 303]        :                                       ; check for key press
+[ 304]    0853: ??                                    	mov	al, 00h
+[ 305]    0855: ??                                    	out	keyPad, al
+[ 306]    0857: ??                                    k_x1:	in	al, keyPad
+[ 307]    0859: ??                                    	and	al, 0f0h
+[ 308]    085B: ??                                    	cmp	al, 0f0h		; if some key is pressed
+[ 309]    085D: ??                                    	jne	k_x1
+[ 310]        :                                       
+[ 311]    085F: ??                                    	call delayA			; debounce
+[ 312]        :                                       
+[ 313]        :                                       ; check for key press
+[ 314]    0862: ??                                    	mov	al, 00h
+[ 315]    0864: ??                                    	out	keyPad, al
+[ 316]    0866: ??                                    	in	al, keyPad
+[ 317]    0868: ??                                    	and	al, 0f0h
+[ 318]    086A: ??                                    	cmp	al, 0f0h		; if some key is still pressed
+[ 319]    086C: ??                                    	jne	k_x1
+[ 320]        :                                       
+[ 321]        :                                       ; key pressed in col1
+[ 322]        :                                       
+[ 323]    086E: ??                                    	mov	al, 0eh
+[ 324]    0870: ??                                    	mov	bl, al
+[ 325]    0872: ??                                    	out	keyPad, al
+[ 326]    0874: ??                                    	in	al, keyPad
+[ 327]    0876: ??                                    	and	al, 0f0h
+[ 328]    0878: ??                                    	cmp	al, 0f0h
+[ 329]    087A: ??                                    	jne	k_x3
+[ 330]        :                                       
+[ 331]        :                                       ; key pressed in col2
+[ 332]        :                                       
+[ 333]    087C: ??                                    	mov	al, 0dh
+[ 334]    087E: ??                                    	mov	bl, al
+[ 335]    0880: ??                                    	out	keyPad, al
+[ 336]    0882: ??                                    	in	al, keyPad
+[ 337]    0884: ??                                    	and	al, 0f0h
+[ 338]    0886: ??                                    	cmp	al, 0f0h
+[ 339]    0888: ??                                    	jne	k_x3
+[ 340]        :                                       
+[ 341]        :                                       ; key pressed in col3
+[ 342]        :                                       
+[ 343]    088A: ??                                    	mov	al, 0bh
+[ 344]    088C: ??                                    	mov	bl, al
+[ 345]    088E: ??                                    	out	keyPad, al
+[ 346]    0890: ??                                    	in	al, keyPad
+[ 347]    0892: ??                                    	and	al, 0f0h
+[ 348]    0894: ??                                    	cmp	al, 0f0h
+[ 349]    0896: ??                                    	jne	k_x3
+[ 350]        :                                       
+[ 351]        :                                       ; key pressed in col4
+[ 352]        :                                       
+[ 353]    0898: ??                                    	mov	al, 07h
+[ 354]    089A: ??                                    	mov	bl, al
+[ 355]    089C: ??                                    	out	keyPad, al
+[ 356]    089E: ??                                    	in	al, keyPad
+[ 357]    08A0: ??                                    	and	al, 0f0h
+[ 358]    08A2: ??                                    	cmp	al, 0f0h
+[ 359]    08A4: ??                                    	jne	k_x3
+[ 360]        :                                       
+[ 361]        :                                       ; decode key
+[ 362]    08A6: ??                                    k_x3:	or	al, bl			; combine input:output
+[ 363]    08A8: ??                                    	mov	di, 0
+[ 364]    08AB: ??                                    k_x4:	cmp	al, keyCode[di]
+[ 365]    08AF: ??                                    	jne	k_x5			; find matching entry in keyCode
+[ 366]    08B1: ??                                    	inc	di
+[ 367]    08B2: ??                                    	cmp	di, 16
+[ 368]    08B5: ??                                    	jb	k_x4
+[ 369]        :                                       
+[ 370]    08B7: ??                                    k_x5:	mov	al, keyAct[di]
+[ 371]    08BB: ??                                    	mov	ah, 0h
+[ 372]    08BD: ??                                    	ret
+[ 373]        :                                       
+[ 374]        :                                       getKey endp
+[ 375]        :                                       
+[ 376]    08BE:                                       getNum proc near
+[ 377]    08BE: ??                                    gn_str:	call	getKey
+[ 378]    08C1: ??                                    	cmp	al, eKey
+[ 379]    08C3: ??                                    	je	gn_ret
+[ 380]    08C5: ??                                    	cmp	al, bkey
+[ 381]    08C7: ??                                    	jne	gn_num
+[ 382]    08C9: ??                                    	call	clrKBfr
+[ 383]    08CC: ??                                    	jnp	gn_str
+[ 384]    08CE: ??                                    gn_num:	cmp	al, 0
+[ 385]    08D0: ??                                    	jl	gn_str
+[ 386]    08D2: ??                                    	mov	cl, 4
+[ 387]    08D4: ??                                    	shl	keyBfr, cl
+[ 388]    08D8: ??                                    	or	ax, keyBfr
+[ 389]    08DC: ??                                    	call	setDisp1
+[ 390]    08DF: ??                                    	jmp	gn_str
+[ 391]    08E1: ??                                    gn_ret:	mov	ax, keyBfr
+[ 392]    08E4: ??                                    	ret
+[ 393]        :                                       getNum endp
+[ 394]        :                                       
+[ 395]    08E5:                                       getTemp proc near
+[ 396]    08E5: ??                                    	mov	dl, 1
+[ 397]    08E7: ??                                    	mov	al, 00000000b
+[ 398]    08E9: ??                                    	out	portC2, al	; read adc
+[ 399]    08EB: ??                                    gt_x0:	nop
+[ 400]    08EC: ??                                    	cmp	dl, 1
+[ 401]    08EF: ??                                    	je	gt_x0:
+[ 402]    08F1: ??                                    	in	al, tempInp
+[ 403]    08F3: ??                                    	mov	ah, al
+[ 404]    08F5: ??                                    	mov	al, 00000001b
+[ 405]    08F7: ??                                    	out	portC2, al	; stop read adc
+[ 406]    08F9: ??                                    	mov	al, ah
+[ 407]    08FB: ??                                    	mov	actTemp, al
+[ 408]    08FE: ??                                    	ret
+[ 409]        :                                       getTemp endp
+[ 410]        :                                       
+[ 411]        :                                       ; make dl 1
+[ 412]        :                                       ; start adc conversion
+[ 413]        :                                       ; loop till dl == 1
+[ 414]        :                                       ; store temp in al
+[ 415]        :                                       
+[ 416]        :                                       ; ISRTemp will make dl = 0
+[ 417]        :                                       
+[ 418]    08FF:                                       opnVlv proc near
+[ 419]    08FF: ??                                    	pusha
+[ 420]    0900: ??                                    	mov	al, 00000010b
+[ 421]    0902: ??                                    	out	portC2, al
+[ 422]    0904: ??                                    	popa
+[ 423]    0905: ??                                    ov_x0:	ret
+[ 424]        :                                       opnVlv endp
+[ 425]        :                                       
+[ 426]    0906:                                       ringAlm proc near
+[ 427]    0906: ??                                    	pusha
+[ 428]    0907: ??                                    	mov	al, 00000101b
+[ 429]    0909: ??                                    	out	portC2, al
+[ 430]    090B: ??                                    	popa
+[ 431]    090C: ??                                    	ret
+[ 432]        :                                       ringAlm endp
+[ 433]        :                                       
+[ 434]    090D:                                       setDisp0 proc near
+[ 435]    090D: ??                                    	out	disp0, al
+[ 436]    090F: ??                                    	ret
+[ 437]        :                                       setDisp0 endp
+[ 438]        :                                       
+[ 439]    0910:                                       setDisp1 proc near
+[ 440]    0910: ??                                    	out	disp1, al
+[ 441]    0912: ??                                    	ret
+[ 442]        :                                       setDisp1 endp
+[ 443]        :                                       
+[ 444]    0913:                                       setTemp proc near
+[ 445]    0913: ??                                    	call	clrKBfr
+[ 446]    0916: ??                                    	call	getNum
+[ 447]    0919: ??                                    	mov	usrTemp, al
+[ 448]    091C: ??                                    	call	bcd2bin
+[ 449]    091F: ??                                    	mov	cUsrTemp, al
+[ 450]    0922: ??                                    	ret
+[ 451]        :                                       setTemp endp
+[ 452]        :                                       
+[ 453]    0923:                                       setTWegt proc near
+[ 454]    0923: ??                                    	call	clrKBfr
+[ 455]    0926: ??                                    	call	getNum
+[ 456]    0929: ??                                    	mov	usrTWegt, ax
+[ 457]    092C: ??                                    	mov	bh, ah		; store msb
+[ 458]    092E: ??                                    	call	bcd2bin		; conv lsb
+[ 459]    0931: ??                                    	mov	bl, al		; store clsb
+[ 460]    0933: ??                                    	mov	al, bh
+[ 461]    0935: ??                                    	call	bcd2bin		; conv msb
+[ 462]    0938: ??                                    	mov	cl, 100
+[ 463]    093A: ??                                    	mul	cl		; cmsb*100
+[ 464]    093C: ??                                    	mov	bh, 0
+[ 465]    093E: ??                                    	add	ax, bx		; cmsb*100 + clsb
+[ 466]    0940: ??                                    	mov	cUsrTWegt, ax
+[ 467]    0943: ??                                    	ret
+[ 468]        :                                       setTWegt endp
+[ 469]        :                                       
+[ 470]    0944:                                       setWegt proc near
+[ 471]    0944: ??                                    	call	clrKBfr
+[ 472]    0947: ??                                    	call	getNum
+[ 473]    094A: ??                                    	mov	usrWegt, al
+[ 474]    094D: ??                                    	call	bcd2bin
+[ 475]    0950: ??                                    	mov	cUsrWegt, al
+[ 476]    0953: ??                                    	ret
+[ 477]        :                                       setWegt endp
+[ 478]        :                                       
+[ 479]    0954:                                       stpTimrB proc near
+[ 480]    0954: ??                                    	pusha
+[ 481]    0955: ??                                    	mov	al, 00001000b
+[ 482]    0957: ??                                    	out	portC2, al
+[ 483]    0959: ??                                    	mov	ticks, 0
+[ 484]    095F: ??                                    	popa
+[ 485]    0960: ??                                    	ret
+[ 486]        :                                       stpTimrB endp
+[ 487]        :                                       
+[ 488]    0961:                                       strTimrB proc near
+[ 489]    0961: ??                                    	pusha
+[ 490]    0962: ??                                    	mov	al, 00001001b
+[ 491]    0964: ??                                    	out	portC2, al
+[ 492]    0966: ??                                    	popa
+[ 493]    0967: ??                                    	ret
+[ 494]        :                                       strTimrB endp
+[ 495]        :                                       
+[ 496]    0968:                                       strtMach proc near
+[ 497]    0968: ??                                    	call	calcTPac
+[ 498]    096B: ??                                    	call	calcDelay
+[ 499]    096E: ??                                    sm_loop:mov	ax, numPac
+[ 500]    0971: ??                                    	cmp	ax, totPac
+[ 501]    0975: ??                                    	jae	sm_ret
+[ 502]    0977: ??                                    	call	getATemp
+[ 503]    097A: ??                                    	mov	bl, cUsrTemp
+[ 504]    097E: ??                                    	add	bl, 5
+[ 505]    0981: ??                                    	mov	al, cActTemp
+[ 506]    0984: ??                                    	cmp	al, bl
+[ 507]    0986: ??                                    	jbe	sm_norm
+[ 508]    0988: ??                                    	call	ringAlm
+[ 509]    098B: ??                                    	jmp	sm_ret
+[ 510]    098D: ??                                    sm_norm:call	bin2bcd
+[ 511]    0990: ??                                    	call	setDisp0
+[ 512]    0993: ??                                    	call	strTimrB
+[ 513]    0996: ??                                    	call	opnVlv
+[ 514]    0999: ??                                    sm_x0:	nop
+[ 515]    099A: ??                                    	mov	ax, ticks
+[ 516]    099D: ??                                    	cmp	ax, cDelay
+[ 517]    09A1: ??                                    	jae	sm_x1
+[ 518]    09A3: ??                                    	jmp	sm_x0
+[ 519]    09A5: ??                                    sm_x1:	call	clsVlv
+[ 520]    09A8: ??                                    	call	stpTimrB
+[ 521]    09AB: ??                                    	inc	numPac
+[ 522]    09AF: ??                                    	call	calcAvPc
+[ 523]    09B2: ??                                    	call	bin2bcd
+[ 524]    09B5: ??                                    	call	setDisp1
+[ 525]    09B8: ??                                    	call	strTimrB
+[ 526]    09BB: ??                                    sm_x2:	nop
+[ 527]    09BC: ??                                    	cmp	ticks, 200
+[ 528]    09C2: ??                                    	jae	sm_x3
+[ 529]    09C4: ??                                    	jmp	sm_x2
+[ 530]    09C6: ??                                    sm_x3:	jmp	sm_loop
+[ 531]    09C8: ??                                    sm_ret:	ret
+[ 532]        :                                       strtMach endp
+[ 533]        :                                       
+[ 534]    09C9:                                       isr2:
+[ 535]    09C9: ??                                    inc	minutes
+[ 536]    09CD: ??                                    iret
+[ 537]        :                                       
+[ 538]    09CE:                                       isr0:
+[ 539]    09CE: ??                                    mov	al, 0ffh
+[ 540]    09D0: ??                                    iret
+[ 541]        :                                       
+[ 542]    09D1:                                       isr1:
+[ 543]    09D1: ??                                    inc	ticks
+[ 544]    09D5: ??                                    iret
+[ 545]        :                                       
+[ 546]    09D6:                                       isr3:
+[ 547]    09D6: ??                                    mov	dl, 00h
+[ 548]    09D8: ??                                    iret
+[ 549]        :                                       
+[ 550]        :                                       
+ 
+===================================================================================================
+ 
+
+
+
+
+===================================================================================================

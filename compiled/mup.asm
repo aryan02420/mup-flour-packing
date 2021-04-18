@@ -1,68 +1,100 @@
-.model tiny
-.86
-.data
-	keyCode db	0EEH, 0EDH, 0EBH, 0E7H	; 7 8 9 T
-		db	0DEH, 0DDH, 0DBH, 0D7H	; 4 5 6 W
-		db	0BEH, 0BDH, 0BBH, 0B7H	; 1 2 3 B
-		db	07EH, 07DH, 07BH, 077H	;   0 S E
-	keyAct	db	007h, 008h, 009h, 0f0h
-		db	004h, 005h, 006h, 0f1h
-		db	001h, 002h, 003h, 0f2h
-		db	0f5h, 000h, 0f4h, 0f3h
+#make_bin#
+
+#LOAD_SEGMENT=FFFFh#
+#LOAD_OFFSET=0000h#
+
+#CS=0000h#
+#IP=0000h#
+
+#DS=0000h#
+#ES=0000h#
+
+#SS=0000h#
+#SP=1FFEh#
+
+#AX=0000h#
+#BX=0000h#
+#CX=0000h#
+#DX=0000h#
+#SI=0000h#
+#DI=0000h#
+#BP=0000h#
 
 
-	keyBfr	dw	?
-	usrTemp	db	?	; bcd
-	usrWegt	db	?	; bcd
-	usrTWegt dw	?	; bcd
-	cUsrTemp db	?	; bin
-	cUsrWegt db	?	; bin
-	cUsrTWegt dw	?	; bin
-	actTemp	db	?	; bin 0-255
-	cActTemp db	?	; bin 0-100
+jmp st1
+nop
 
-	minutes	db	?	; counts minutes passed
-	ticks	dw	?	; counts 0.25 seconds
+org 0160h
+dw  isr1
+dw  0000
+dw  isr2
+dw  0000
+dw  isr3
+dw  0000
 
-	cDelay	dw	?	; how long valve is open
+org 700h
 
-	numPac	dw	?
-	avgPac	dw	?
-	totPac	dw	?
+keyCode db	0EEH, 0EDH, 0EBH, 0E7H	; 7 8 9 T
+	db	0DEH, 0DDH, 0DBH, 0D7H	; 4 5 6 W
+	db	0BEH, 0BDH, 0BBH, 0B7H	; 1 2 3 B
+	db	07EH, 07DH, 07BH, 077H	;   0 S E
+keyAct	db	007h, 008h, 009h, 0f0h
+	db	004h, 005h, 006h, 0f1h
+	db	001h, 002h, 003h, 0f2h
+	db	0f5h, 000h, 0f4h, 0f3h
 
-	tpKG	equ	40
-	;40 ticks = 10sec for 1kg
+org 01000h
 
-	tKey	equ	0f0h
-	wKey	equ	0f1h
-	bKey	equ	0f2h
-	eKey	equ	0f3h
-	sKey	equ	0f4h
+keyBfr	dw	?
+usrTemp	db	?	; bcd
+usrWegt	db	?	; bcd
+usrTWegt dw	?	; bcd
+cUsrTemp db	?	; bin
+cUsrWegt db	?	; bin
+cUsrTWegt dw	?	; bin
+actTemp	db	?	; bin 0-255
+cActTemp db	?	; bin 0-100
+
+minutes	db	?	; counts minutes passed
+ticks	dw	?	; counts 0.25 seconds
+
+cDelay	dw	?	; how long valve is open
+
+numPac	dw	?
+avgPac	dw	?
+totPac	dw	?
+
+tpKG	equ	40
+;40 ticks = 10sec for 1kg
+
+tKey	equ	0f0h
+wKey	equ	0f1h
+bKey	equ	0f2h
+eKey	equ	0f3h
+sKey	equ	0f4h
 
 
-	; IO addresses
+; IO addresses
 
-	disp0	equ	00h
-	disp1	equ	02h
-	keyPad	equ	04h
-	creg1	equ	06h
+disp0	equ	00h
+disp1	equ	02h
+keyPad	equ	04h
+creg1	equ	06h
 
-	tempInp	equ	10h
-	portB2	equ	12h
-	portC2	equ	14h
-	creg2	equ	16h
+tempInp	equ	10h
+portB2	equ	12h
+portC2	equ	14h
+creg2	equ	16h
 
-	timrA	equ	20h
-	timrB	equ	22h
-	timrC	equ	24h
-	timrCreg equ	26h
+timrA	equ	20h
+timrB	equ	22h
+timrC	equ	24h
+timrCreg equ	26h
 
-	8259_1	equ	30h
-	8259_2	equ	32h
-.code
-.startup
+A8259_1	equ	30h
+A8259_2	equ	32h
 
-; ISRTemp will make dl = 0
+st1:    sti
 ; initialize 8255 (1)
 ; portA = output / mode0
 ; portB = output / mode0
@@ -70,8 +102,9 @@
 ; 1   00 0 1   0 0 0
 mov	al, 10001000b
 out	creg1, al
-out	disp0, 00h
-out	disp1, 00h
+mov	al, 00h
+out	disp0, al
+out	disp1, al
 
 ; initialize 8255 (2)
 ; portA = input / mode0
@@ -84,7 +117,6 @@ out	creg2, al
 ; set default values
 mov	usrTemp, 50h
 mov	usrWegt, 02h
-mov	vlvSts, 00h
 
 ; adc read' = 1
 mov	al, 00000001b
@@ -93,25 +125,25 @@ out	portC2, al
 mov 	al,34h
 out 	creg2,al		;control word for clock 1
 mov 	al,54h
-out	creg2,al		;control word for clock 2
+out	    creg2,al		;control word for clock 2
 mov 	al,94h
 out 	creg2,al		;control word for clock 3
 
 mov 	al,88h
-out 	clk1,al			;load lsb in clk1
+out 	timrA,al			;load lsb in clk1
 mov 	al,13h
-out 	clk1,al			;load msb in clk1
+out 	timrA,al			;load msb in clk1
 mov 	al,0fah
-out 	clk2,al			;load lsb in clk2
+out 	timrB,al			;load lsb in clk2
 mov 	al,0f0h
-out 	clk3,al			;load lsb in clk3
+out 	timrC,al			;load lsb in clk3
 
 mov 	al,13h
-out 	8259_1,al
+out 	A8259_1,al
 mov 	al,40h
-out 	8259_2,al
+out 	A8259_2,al
 mov 	al,01h
-out 	8259_2,al
+out 	A8259_2,al
 
 
 mov	minutes, 0
@@ -133,8 +165,6 @@ x2:	cmp	al, sKey
 	jne	x0
 	call	strtMach
 
-.exit
-
 bcd2bin proc near
 	mov	ah, al
 	and	ah, 0fh
@@ -153,6 +183,7 @@ bcd2bin endp
 ; al = al >> 4 = 02h
 ; al = al * 10 = 20 = 14h
 ; al = al + ah = 19h = 25
+
 bin2bcd proc near
 	mov	ah, 0
 	mov	cl, 10
@@ -169,16 +200,17 @@ bin2bcd endp
 ; ah = ax % 10 = 03h
 ; al = al << 4 = 60h
 ; al = al | ah = 63h
+
 calcAvPc proc near
 	pusha
-	mov	al, numPac
-	mov	ah, 0
+	mov	ax, numPac
 	mov	bl, minutes
 	inc	bl
 	div	bl
 	mov	cl, 60
 	mov	ah, 0
 	mul	cl
+	mov	avgPac, ax
 	popa
 	ret
 calcAvPc endp
@@ -198,14 +230,15 @@ calcTPac proc near
 	mov	ax, cUsrTWegt
 	mov	bl, cUsrWegt
 	div	bl
-	mov	totPac, al
+	mov	ah, 0
+	mov	totPac, ax
 	ret
 calcTPac endp
 
 clrKBfr proc near
 	pusha
-	mov	al, 0
-	mov	keyBfr, al
+	mov	ax, 0
+	mov	keyBfr, ax
 	call	setDisp1
 	popa
 	ret
@@ -244,14 +277,15 @@ getATemp endp
 ; 	measured	store
 ; 0*C	00000000b	00000000b
 ; 100*C	11111111b	01100100b
+
 getKey proc near
 
 ; check no key is pressed
 ; if a key is kept pressed
 ; wait for release
 	mov	al, 00h
-	out	keypd, al
-k_x0:	in	al, keypd
+	out	keyPad, al
+k_x0:	in	al, keyPad
 	and	al, 0f0h
 	cmp	al, 0f0h		; if no key was pressed
 	je	x0
@@ -259,8 +293,8 @@ k_x0:	in	al, keypd
 	call delayA			; debounce
 
 	mov	al, 00h
-	out	keypd, al
-	in	al, keypd
+	out	keyPad, al
+	in	al, keyPad
 	and	al, 0f0h
 	cmp	al, 0f0h		; if still no key was pressed
 	je	k_x0
@@ -268,8 +302,8 @@ k_x0:	in	al, keypd
 
 ; check for key press
 	mov	al, 00h
-	out	keypd, al
-k_x1:	in	al, keypd
+	out	keyPad, al
+k_x1:	in	al, keyPad
 	and	al, 0f0h
 	cmp	al, 0f0h		; if some key is pressed
 	jne	k_x1
@@ -278,8 +312,8 @@ k_x1:	in	al, keypd
 
 ; check for key press
 	mov	al, 00h
-	out	keypd, al
-	in	al, keypd
+	out	keyPad, al
+	in	al, keyPad
 	and	al, 0f0h
 	cmp	al, 0f0h		; if some key is still pressed
 	jne	k_x1
@@ -288,8 +322,8 @@ k_x1:	in	al, keypd
 
 	mov	al, 0eh
 	mov	bl, al
-	out	keypd, al
-	in	al, keypd
+	out	keyPad, al
+	in	al, keyPad
 	and	al, 0f0h
 	cmp	al, 0f0h
 	jne	k_x3
@@ -298,8 +332,8 @@ k_x1:	in	al, keypd
 
 	mov	al, 0dh
 	mov	bl, al
-	out	keypd, al
-	in	al, keypd
+	out	keyPad, al
+	in	al, keyPad
 	and	al, 0f0h
 	cmp	al, 0f0h
 	jne	k_x3
@@ -308,8 +342,8 @@ k_x1:	in	al, keypd
 
 	mov	al, 0bh
 	mov	bl, al
-	out	keypd, al
-	in	al, keypd
+	out	keyPad, al
+	in	al, keyPad
 	and	al, 0f0h
 	cmp	al, 0f0h
 	jne	k_x3
@@ -318,8 +352,8 @@ k_x1:	in	al, keypd
 
 	mov	al, 07h
 	mov	bl, al
-	out	keypd, al
-	in	al, keypd
+	out	keyPad, al
+	in	al, keyPad
 	and	al, 0f0h
 	cmp	al, 0f0h
 	jne	k_x3
@@ -351,7 +385,7 @@ gn_num:	cmp	al, 0
 	jl	gn_str
 	mov	cl, 4
 	shl	keyBfr, cl
-	or	al, keyBfr
+	or	ax, keyBfr
 	call	setDisp1
 	jmp	gn_str
 gn_ret:	mov	ax, keyBfr
@@ -362,10 +396,11 @@ getTemp proc near
 	mov	dl, 1
 	mov	al, 00000000b
 	out	portC2, al	; read adc
-gt_x0	nop
+gt_x0:	nop
 	cmp	dl, 1
 	je	gt_x0:
-	in	ah, tempInp
+	in	al, tempInp
+	mov	ah, al
 	mov	al, 00000001b
 	out	portC2, al	; stop read adc
 	mov	al, ah
@@ -378,7 +413,7 @@ getTemp endp
 ; loop till dl == 1
 ; store temp in al
 
-
+; ISRTemp will make dl = 0
 
 opnVlv proc near
 	pusha
@@ -401,10 +436,10 @@ setDisp0 proc near
 	ret
 setDisp0 endp
 
-setDisp0 proc near
+setDisp1 proc near
 	out	disp1, al
 	ret
-setDisp0 endp
+setDisp1 endp
 
 setTemp proc near
 	call	clrKBfr
@@ -477,7 +512,8 @@ sm_norm:call	bin2bcd
 	call	strTimrB
 	call	opnVlv
 sm_x0:	nop
-	cmp	ticks, cDelay
+	mov	ax, ticks
+	cmp	ax, cDelay
 	jae	sm_x1
 	jmp	sm_x0
 sm_x1:	call	clsVlv
@@ -495,19 +531,18 @@ sm_x3:	jmp	sm_loop
 sm_ret:	ret
 strtMach endp
 
-end
-
-; ISRs
-
-
+isr2:
 inc	minutes
 iret
 
+isr0:
 mov	al, 0ffh
 iret
 
+isr1:
 inc	ticks
 iret
 
-mov	dl, 0
+isr3:
+mov	dl, 00h
 iret

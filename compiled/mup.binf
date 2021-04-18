@@ -1,0 +1,21 @@
+FFFF ; load to segment.
+0000 ; load to offset.
+00 ;   AL
+00 ;   AH
+00 ;   BL
+00 ;   BH
+00 ;   CL
+00 ;   CH
+00 ;   DL
+00 ;   DH
+0000 ;   DS
+0000 ;   ES
+0000 ;   SI
+0000 ;   DI
+0000 ;   BP
+0000 ;   CS
+0000 ;   IP
+0000 ;   SS
+1FFE ;   SP
+
+MEM=

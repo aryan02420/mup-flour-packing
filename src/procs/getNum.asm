@@ -10,7 +10,7 @@ gn_num:	cmp	al, 0
 	jl	gn_str
 	mov	cl, 4
 	shl	keyBfr, cl
-	or	al, keyBfr
+	or	ax, keyBfr
 	call	setDisp1
 	jmp	gn_str
 gn_ret:	mov	ax, keyBfr

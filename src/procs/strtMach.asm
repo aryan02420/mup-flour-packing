@@ -17,7 +17,8 @@ sm_norm:call	bin2bcd
 	call	strTimrB
 	call	opnVlv
 sm_x0:	nop
-	cmp	ticks, cDelay
+	mov	ax, ticks
+	cmp	ax, cDelay
 	jae	sm_x1
 	jmp	sm_x0
 sm_x1:	call	clsVlv

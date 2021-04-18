@@ -28,7 +28,7 @@ out	portC2, al
 mov 	al,34h
 out 	creg2,al		;control word for clock 1
 mov 	al,54h
-out	creg2,al		;control word for clock 2
+out	    creg2,al		;control word for clock 2
 mov 	al,94h
 out 	creg2,al		;control word for clock 3
 

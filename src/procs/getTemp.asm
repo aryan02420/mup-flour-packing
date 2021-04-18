@@ -2,10 +2,11 @@ getTemp proc near
 	mov	dl, 1
 	mov	al, 00000000b
 	out	portC2, al	; read adc
-gt_x0	nop
+gt_x0:	nop
 	cmp	dl, 1
 	je	gt_x0:
-	in	ah, tempInp
+	in	al, tempInp
+	mov	ah, al
 	mov	al, 00000001b
 	out	portC2, al	; stop read adc
 	mov	al, ah

@@ -1,3 +1,39 @@
+#make_bin#
+
+#LOAD_SEGMENT=FFFFh#
+#LOAD_OFFSET=0000h#
+
+#CS=0000h#
+#IP=0000h#
+
+#DS=0000h#
+#ES=0000h#
+
+#SS=0000h#
+#SP=1FFEh#
+
+#AX=0000h#
+#BX=0000h#
+#CX=0000h#
+#DX=0000h#
+#SI=0000h#
+#DI=0000h#
+#BP=0000h#
+
+
+jmp st1
+nop
+
+org 0160h
+dw  isr1
+dw  0000
+dw  isr2
+dw  0000
+dw  isr3
+dw  0000
+
+org 700h
+
 keyCode db	0EEH, 0EDH, 0EBH, 0E7H	; 7 8 9 T
 	db	0DEH, 0DDH, 0DBH, 0D7H	; 4 5 6 W
 	db	0BEH, 0BDH, 0BBH, 0B7H	; 1 2 3 B
@@ -7,6 +43,7 @@ keyAct	db	007h, 008h, 009h, 0f0h
 	db	001h, 002h, 003h, 0f2h
 	db	0f5h, 000h, 0f4h, 0f3h
 
+org 01000h
 
 keyBfr	dw	?
 usrTemp	db	?	; bcd
@@ -56,3 +93,5 @@ timrCreg equ	26h
 
 A8259_1	equ	30h
 A8259_2	equ	32h
+
+st1:    sti
