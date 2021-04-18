@@ -54,5 +54,5 @@ timrB	equ	22h
 timrC	equ	24h
 timrCreg equ	26h
 
-8259_1	equ	30h
-8259_2	equ	32h
+A8259_1	equ	30h
+A8259_2	equ	32h

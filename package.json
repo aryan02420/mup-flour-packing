@@ -1,0 +1,24 @@
+{
+  "name": "mup-flour-packing",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "grunt watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://aryan02420@github.com/aryan02420/mup-flour-packing.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aryan02420/mup-flour-packing/issues"
+  },
+  "homepage": "https://github.com/aryan02420/mup-flour-packing#readme",
+  "devDependencies": {
+    "grunt": "^1.3.0",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-watch": "^1.1.0"
+  },
+  "description": ""
+}
